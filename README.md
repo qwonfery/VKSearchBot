@@ -2,7 +2,10 @@
 Для запуска сервиса стоит скачать .exe файл из релиза.
 
 Сначала приложение запросит файл .txt/.cvs формата с запросами. Главное чтобы запросы были на разных строках. Пример показан ниже. 
+
 ![image](https://github.com/user-attachments/assets/40bf92de-8d52-471f-9e71-9c719621797d)
+
+
 ![image](https://github.com/user-attachments/assets/131979d6-a3e0-47bb-9f91-26fde2d8b3da)
 
 Далее запросит API ключ
@@ -13,6 +16,7 @@
 vk.com, rutube.ru, dzen.ru
 
 Результат будет в output файле в той же директории что и скрипт
+
 ![image](https://github.com/user-attachments/assets/397fcaff-bd65-49a4-9228-b763392080cb)
 
 В будущем планируется
