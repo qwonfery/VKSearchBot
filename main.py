@@ -1,13 +1,13 @@
 import asyncio
 import logging
-import os
 
 from aiogram import Bot, Dispatcher, types
-from aiogram.filters.command import Command, CommandStart
+from aiogram.filters.command import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram import F
 
+import top_domains
 from config import BOT_TOKEN
 
 # Включаем логирование, чтобы не пропустить важные сообщения
@@ -21,6 +21,7 @@ dp = Dispatcher()
 # Определяем состояния
 class Form(StatesGroup):
     query = State()
+    folder_id = State()
     api_key = State()
     domains = State()
 
@@ -58,6 +59,14 @@ async def process_string(message: types.Message, state: FSMContext):
 async def process_api_key(message: types.Message, state: FSMContext):
     await state.update_data(api_key=message.text)
 
+    await state.set_state(Form.folder_id)
+    await message.reply("Теперь отправьте идентификатор каталога (https://yandex.cloud/ru/docs/resource-manager/operations/folder/get-id#console_1)")
+
+
+@dp.message(Form.folder_id)
+async def process_folder_id(message: types.Message, state: FSMContext):
+    await state.update_data(folder_id=message.text)
+
     await state.set_state(Form.domains)
     await message.reply("Теперь отправьте домен или домены, по которым мы будем смотреть позиции (разделите домены запятой).")
 
@@ -67,16 +76,19 @@ async def process_domains(message: types.Message, state: FSMContext):
     await state.update_data(domains=message.text)
 
     user_data = await state.get_data()
-    file_path = user_data.get('file_path')
     queries_string = user_data.get('queries_string')
     api_key = user_data.get('api_key')
     domains = user_data.get('domains')
+    folder_id = user_data.get('folder_id')
 
-    # Здесь вы можете обработать полученные данные
-    await message.reply(f"Полученные данные:\nЗапросы: {queries_string}\nAPI Key: {api_key}\nДомены: {domains}")
+    # Обработка данных
+    repl = top_domains.process_queries(queries_string, api_key, folder_id, domains)
+    await message.reply(repl)
+    # await message.reply(f"Полученные данные:\nЗапросы: {queries_string}\nAPI Key: {api_key}\nДомены: {domains}")
 
-    # Finish conversation
-    await state.set_state(Form.query)
+    # Старт по новой
+    await cmd_start(message, state)
+    # await state.set_state(Form.query)
 
 
 # Запуск процесса поллинга новых апдейтов
