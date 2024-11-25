@@ -120,14 +120,30 @@ def process_queries(queries: str, api_key: str, folder_id: str, domains: str) ->
     return content
 
 
+def console_controller():
+    print("Привет! Отправь мне название CSV/TXT файла с запросами. Он должен быть в той же папке что и скрипт.")
+    with open(input(), 'r') as f:
+        queries = f.read()
+    print("Теперь отправь ключ API.")
+    api_key = input()
+    print("Теперь отправь идентификатор каталога.")
+    folder_id = input()
+    print("Теперь отправьте домен или домены, по которым мы будем смотреть позиции (разделите домены запятой).")
+    domains = input()
+
+    with open('output.txt', 'w') as f:
+        f.write(process_queries(queries, api_key, folder_id, domains))
+
+
 if __name__ == '__main__':
-    domains = "vk.com, rutube.ru, dzen.ru"
-    query1 = "субстанция фильм смотреть онлайн"
-    query2 = 'вк видео смотреть онлайн бесплатно'
-    # res = yandex_search(query1, FOLDER_ID, API_KEY)
-    # res = parse_xml(res)
+    # domains = "vk.com, rutube.ru, dzen.ru"
+    # query1 = "субстанция фильм смотреть онлайн"
+    # query2 = 'вк видео смотреть онлайн бесплатно'
+    # # res = yandex_search(query1, FOLDER_ID, API_KEY)
+    # # res = parse_xml(res)
+    # # print(res)
+    # # res = find_in_top(res, domains)
+    # res = process_queries(query1 + '\n' + query2, API_KEY, FOLDER_ID, domains)
     # print(res)
-    # res = find_in_top(res, domains)
-    res = process_queries(query1 + '\n' + query2, API_KEY, FOLDER_ID, domains)
-    print(res)
+    console_controller()
 
