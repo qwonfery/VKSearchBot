@@ -1,0 +1,10 @@
+# игнор всех папок
+**
+
+# исключения
+!resourses
+!.env
+!config.py
+!main.py
+!top_domains.py
+!requirements.txt
